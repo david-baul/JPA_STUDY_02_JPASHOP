@@ -5,9 +5,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+
 @Entity
 @Table(name = "ORDERS")
-public class Order {
+public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ORDER_ID")
@@ -15,15 +18,15 @@ public class Order {
 
 //    @Column(name = "MEMBER_ID")
 //    private Long memberId;
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToOne
+    @OneToOne(fetch = LAZY, cascade = ALL) //cascade Order를 저장하면 자동으로 Delivery도 저장
     @JoinColumn(name = "DELIVERY_ID")
     private Delivery delivery;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade = ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     private LocalDateTime orderDate;
